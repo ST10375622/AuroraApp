@@ -39,6 +39,7 @@ class RegistrationActivity : AppCompatActivity() {
             showDatePicker(dob)
         }
 
+        //what will happen when the register button is clicked
         registerButton.setOnClickListener {
             val email = email.text.toString()
             val name = name.text.toString()
@@ -46,6 +47,7 @@ class RegistrationActivity : AppCompatActivity() {
             val password = password.text.toString()
             val confirmPassword = confirmPassword.text.toString()
 
+            //if the following fields are empty the toast/pop up message will display
             if (email.isBlank() || name.isBlank() || dob.isBlank() || password.isBlank()){
                 //pop up will display on the screen
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -75,6 +77,9 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
+    //makes the date entry for dob user friendly
+    //the date picker will display when the user clicks on the dob field.
+    //a calander will appear and the user will be able to click on their dob
     private fun showDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
