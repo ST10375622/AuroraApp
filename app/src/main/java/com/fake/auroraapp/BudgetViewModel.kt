@@ -24,7 +24,6 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             repository.insertOrUpdateBudget(budget)
         }
-
     }
 
     fun getCategories(userId: Int): LiveData<List<Category>> = repository.getCategories(userId)
@@ -44,6 +43,7 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         repository.getExpenseByCategory(categoryId)
 
     fun getAllExpenses(): LiveData<List<Expense>> = repository.getAllExpenses()
+
 
     fun insertExpense(expense: Expense){
         viewModelScope.launch {

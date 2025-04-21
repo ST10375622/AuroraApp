@@ -22,4 +22,5 @@ class BudgetRepository (
     fun getExpenseByCategory(categoryId: Int): LiveData<List<Expense>> = expenseDao.getExpenseByCategory(categoryId)
     fun getAllExpenses(): LiveData<List<Expense>> = expenseDao.getAllExpense()
     suspend fun deleteExpense(expense: Expense) = expenseDao.deleteExpense(expense)
+
 }
