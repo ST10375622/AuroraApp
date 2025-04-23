@@ -28,7 +28,7 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Di
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val expense = getItem(position)
         holder.txtName.text = expense.name
-        holder.txtAmount.text = "$${expense.amount}"
+        holder.txtAmount.text = "R ${expense.amount}"
         holder.txtDate.text = expense.date
 
         if (!expense.receiptUri.isNullOrEmpty()) {

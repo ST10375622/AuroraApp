@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +30,10 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import com.fake.auroraapp.Category
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.Legend.LegendForm
+import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
 import java.io.File
 import java.io.FileOutputStream
 
@@ -99,10 +104,12 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
 
         viewModel.getCategories(userId).observe(this) { categories ->
             categoryAdapter.submitList(categories)
-        }
 
-        viewModel.getAllExpenses().observe(this) { expenses ->
-            updatePieChart(pieChart, expenses)
+            val categoryMap = categories.associate {it.id to it.name}
+
+            viewModel.getAllExpenses().observe(this) { expenses ->
+                updatePieChart(pieChart, expenses, categoryMap)
+            }
         }
 
         btnSetBudget.setOnClickListener {
@@ -119,16 +126,49 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         imagePickerLauncher.launch("image/*")
     }
 
-    private fun updatePieChart(pieChart: PieChart, expenses: List<Expense>) {
-        val entries = expenses.groupBy { it.categoryId }.map {
-            PieEntry(it.value.sumOf { expense -> expense.amount }.toFloat(), it.key)
+    private fun updatePieChart(pieChart: PieChart, expenses: List<Expense>, categoryMap: Map<Int, String>) {
+
+        val groupedExpenses = expenses.groupBy { it.categoryId }
+
+        val entries = groupedExpenses.map {  (categoryId, expenseList) ->
+            PieEntry(
+                expenseList.sumOf { it.amount }.toFloat(), ""
+            )
         }
-        val dataSet = PieDataSet(entries, "Daily Spending").apply {
-            colors = ColorTemplate.MATERIAL_COLORS.toList()
+
+        val labelsForLegend = groupedExpenses.map { (categoryId, _) ->
+            categoryMap[categoryId] ?: "Unkown"
         }
+
+        val dataSet = PieDataSet(entries, "")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+
+        dataSet.setDrawValues(true)
+        dataSet.valueFormatter = PercentFormatter(pieChart)
+
         val data = PieData(dataSet)
+        data.setValueTextSize(14f)
+        data.setValueFormatter(PercentFormatter(pieChart))
+
         pieChart.data = data
+        pieChart.setUsePercentValues(true)
+        pieChart.setDrawEntryLabels(false)
+
+        val legend = pieChart.legend
+        legend.isEnabled = true
+        legend.textSize = 14f
+        legend.form = Legend.LegendForm.CIRCLE
+
+        legend.orientation = Legend.LegendOrientation.HORIZONTAL
+        legend.xEntrySpace = 100f
+
+        legend.setCustom(
+            labelsForLegend.mapIndexed { index, label ->
+                LegendEntry(label, Legend.LegendForm.CIRCLE, 10f, 2f, null, dataSet.colors[index])
+            }
+        )
         pieChart.invalidate()
+
     }
 
     private fun showBudgetDialog() {

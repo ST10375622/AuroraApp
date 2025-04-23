@@ -92,14 +92,4 @@
         tools:layout_editor_absoluteY="391dp"
         android:layout_marginBottom="12dp"
         android:padding="12sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@color/Gray"
-        android:textSize="16sp"/>
-
-
-
 </LinearLayout>
