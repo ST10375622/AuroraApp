@@ -41,16 +41,21 @@ class RegistrationActivity : AppCompatActivity() {
 
         //what will happen when the register button is clicked
         registerButton.setOnClickListener {
-            val email = email.text.toString()
-            val name = name.text.toString()
-            val dob = dob.text.toString()
-            val password = password.text.toString()
-            val confirmPassword = confirmPassword.text.toString()
+            val email = email.text.toString().trim()
+            val name = name.text.toString().trim()
+            val dob = dob.text.toString().trim()
+            val password = password.text.toString().trim()
+            val confirmPassword = confirmPassword.text.toString().trim()
 
             //if the following fields are empty the toast/pop up message will display
             if (email.isBlank() || name.isBlank() || dob.isBlank() || password.isBlank()){
                 //pop up will display on the screen
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (password != confirmPassword) {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -63,12 +68,12 @@ class RegistrationActivity : AppCompatActivity() {
                     }
                 } else {
                     val user = User(email = email, name = name, dob = dob, password = password)
-                    db.userDao().insertUser(user)
+                    val userId = db.userDao().insertUser(user)
                     runOnUiThread {
-                        Toast.makeText(this@RegistrationActivity, "Registration Successful", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RegistrationActivity, "Registration Successful (ID: $userId)", Toast.LENGTH_SHORT).show()
 
                         //direct the user to the home screen
-                        val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
+                        val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
