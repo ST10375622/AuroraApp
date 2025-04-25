@@ -14,4 +14,7 @@ interface BudgetDao {
 
     @Query("SELECT * FROM Budget WHERE UserId = :userId")
     fun getBudget(userId: Int): LiveData<Budget>
+
+    @Query("SELECT * FROM Budget WHERE userId = :userId")
+    suspend fun getBudgetValue(userId: Int): Budget?
 }

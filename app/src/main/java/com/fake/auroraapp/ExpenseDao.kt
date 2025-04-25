@@ -18,6 +18,10 @@ interface ExpenseDao {
     @Query("SELECT * FROM Expense")
     fun getAllExpense(): LiveData<List<Expense>>
 
+    //return all the expenses for the user with this ID
+    @Query("SELECT SUM(amount) FROM Expense WHERE userId = :userId")
+    suspend fun getTotalExpenses(userId: Int): Double?
+
     @Delete
     suspend fun deleteExpense(expense: Expense)
 }

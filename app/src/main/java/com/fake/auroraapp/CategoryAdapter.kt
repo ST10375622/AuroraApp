@@ -27,7 +27,8 @@ interface ExpenseImagePicker{
 class CategoryAdapter (
     private val viewModel: BudgetViewModel,
     private val context: Context,
-    private val imagePickerCallback : ExpenseImagePicker
+    private val imagePickerCallback : ExpenseImagePicker,
+    private val userId: Int
 ): ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(DiffCallback()) {
 
     inner class CategoryViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -88,6 +89,7 @@ class CategoryAdapter (
             .setView(dialogView)
             .setPositiveButton("Add") { _, _ ->
                 val expense = Expense(
+                    userId = userId,
                     categoryId = categoryId,
                     name = nameInput.text.toString(),
                     description = descInput.text.toString(),

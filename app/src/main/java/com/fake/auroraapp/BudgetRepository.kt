@@ -13,6 +13,9 @@ class BudgetRepository (
 
     fun getBudget(userId: Int): LiveData<Budget> = budgetDao.getBudget(userId)
     suspend fun insertOrUpdateBudget(budget: Budget) = budgetDao.insertOrUpdateBudget(budget)
+    suspend fun getTotalExpense(userId: Int): Double{
+        return expenseDao.getTotalExpenses(userId) ?: 0.0
+    }
 
     suspend fun insertCategory(category: Category): Long = categoryDao.insertCategory(category)
     fun getCategories(userId: Int): LiveData<List<Category>> = categoryDao.getCategoriesByUser(userId)
@@ -22,5 +25,6 @@ class BudgetRepository (
     fun getExpenseByCategory(categoryId: Int): LiveData<List<Expense>> = expenseDao.getExpenseByCategory(categoryId)
     fun getAllExpenses(): LiveData<List<Expense>> = expenseDao.getAllExpense()
     suspend fun deleteExpense(expense: Expense) = expenseDao.deleteExpense(expense)
+    suspend fun getBudgetValue(userId: Int): Budget? = budgetDao.getBudgetValue(userId)
 
 }

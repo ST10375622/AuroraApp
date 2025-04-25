@@ -71,7 +71,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         val addCategory = findViewById<FloatingActionButton>(R.id.AddCategory)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerCategories)
 
-        categoryAdapter = CategoryAdapter(viewModel, this, this)
+        categoryAdapter = CategoryAdapter(viewModel, this, this, userId)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = categoryAdapter
 
@@ -99,6 +99,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             budget?.let {
                 textBudget.text = "Budget: R ${it.monthlyBudget}"
                 textLeft.text = "Left: R ${it.amountLeft}"
+
             }
         }
 
@@ -172,16 +173,23 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
     }
 
     private fun showBudgetDialog() {
-        val input = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-        }
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_set_budget, null)
+        val monthlyBudgetInput = dialogView.findViewById<EditText>(R.id.editMonthlyBudget)
+        val minimumBudgetInput = dialogView.findViewById<EditText>(R.id.editMinimumBudget)
+
         AlertDialog.Builder(this)
-            .setTitle("Set Monthly Budget")
-            .setView(input)
+            .setTitle("Set Budget")
+            .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
-                val amount = input.text.toString().toDoubleOrNull() ?: return@setPositiveButton
-                val budget = Budget(userId, monthlyBudget = amount, amountLeft = amount)
-                viewModel.insertOrUpdateBudget(budget)
+                val monthly = monthlyBudgetInput.text.toString().toDoubleOrNull()
+                val minimum = minimumBudgetInput.text.toString().toDoubleOrNull()
+
+                if(monthly != null && minimum != null) {
+                   viewModel.updateAmountLeft(userId, monthly, minimum)
+                } else {
+                    Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show()
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()

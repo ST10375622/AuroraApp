@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Budget(
     @PrimaryKey val userId: Int,
     val monthlyBudget: Double,
-    val amountLeft: Double
+    val amountLeft: Double,
+    val minimumBudget: Double
 )

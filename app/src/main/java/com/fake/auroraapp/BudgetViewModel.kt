@@ -44,16 +44,41 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
 
     fun getAllExpenses(): LiveData<List<Expense>> = repository.getAllExpenses()
 
-
     fun insertExpense(expense: Expense){
         viewModelScope.launch {
             repository.insertExpense(expense)
+
+            val budget = repository.getBudgetValue(expense.userId)
+            if (budget != null) {
+                updateAmountLeft(expense.userId, budget.monthlyBudget, budget.minimumBudget)
+            }
         }
     }
 
     fun deleteExpense(expense: Expense){
         viewModelScope.launch {
             repository.deleteExpense(expense)
+
+            val budget = repository.getBudgetValue(expense.userId)
+            if (budget != null) {
+                updateAmountLeft(expense.userId, budget.monthlyBudget, budget.minimumBudget)
+            }
+        }
+    }
+
+    fun updateAmountLeft(userId: Int, monthlyBudget: Double, minimumBudget: Double) {
+        viewModelScope.launch {
+            val totalExpense = repository.getTotalExpense(userId)
+            val amountLeft = monthlyBudget - totalExpense
+
+            val updatedBudget = Budget(
+                userId = userId,
+                monthlyBudget = monthlyBudget,
+                minimumBudget = minimumBudget,
+                amountLeft = amountLeft
+            )
+            insertOrUpdateBudget(updatedBudget)
+
         }
     }
 }
