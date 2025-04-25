@@ -81,4 +81,9 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
 
         }
     }
+
+    fun getExpensesForMonth(month: Int, year: Int): LiveData<List<Expense>> {
+        val formattedMonth = String.format("%02d", month)
+        return repository.getExpensesByMonth(formattedMonth, year.toString())
+    }
 }

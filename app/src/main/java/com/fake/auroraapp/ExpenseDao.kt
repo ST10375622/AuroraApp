@@ -6,6 +6,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.time.Month
+import java.time.Year
 
 @Dao
 interface ExpenseDao {
@@ -24,4 +26,7 @@ interface ExpenseDao {
 
     @Delete
     suspend fun deleteExpense(expense: Expense)
+
+    @Query("SELECT * FROM Expense WHERE strftime('%m', date) = :month and strftime('%Y', date) = :year")
+    fun getExpensesByMonth(month: String, year: String): LiveData<List<Expense>>
 }
