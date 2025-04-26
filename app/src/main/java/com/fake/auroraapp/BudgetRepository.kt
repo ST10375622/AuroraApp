@@ -30,4 +30,16 @@ class BudgetRepository (
     suspend fun deleteExpense(expense: Expense) = expenseDao.deleteExpense(expense)
     suspend fun getBudgetValue(userId: Int): Budget? = budgetDao.getBudgetValue(userId)
 
+    suspend fun getTopCategory(month: String, year: String): TopCategory? {
+        return expenseDao.getTopCategory(month, year)
+    }
+
+    suspend fun getTotalSpent(month: String, year: String): Double? {
+        return  expenseDao.getTotalSpent(month, year)
+    }
+
+    suspend fun getTransactionCount(month: String, year: String): Int {
+        return expenseDao.getTransactionCount(month, year)
+    }
+
 }

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.AuroraApp"
         tools:targetApi="31">
         <activity
+            android:name=".MonthlyReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".AllExpensesActivity"
             android:exported="false" />
         <activity

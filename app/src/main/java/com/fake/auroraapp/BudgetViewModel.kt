@@ -86,4 +86,19 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         val formattedMonth = String.format("%02d", month)
         return repository.getExpensesByMonth(formattedMonth, year.toString())
     }
+
+    suspend fun getTopSpendingCategory(month: Int, year: Int): TopCategory? {
+        val m = String.format("%02d", month)
+        return repository.getTopCategory(m, year.toString())
+    }
+
+    suspend fun getTotalSpent(month: Int, year: Int): Double {
+        val m = String.format("%02d", month)
+        return repository.getTotalSpent(m, year.toString()) ?: 0.0
+    }
+
+    suspend fun getTransactionCount(month: Int, year: Int): Int {
+        val m = String.format("%02d", month)
+        return repository.getTransactionCount(m, year.toString())
+    }
 }
