@@ -3,6 +3,7 @@ package com.fake.auroraapp
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,6 +20,7 @@ import java.time.format.TextStyle
 
 class MonthlyReportActivity : AppCompatActivity() {
 
+    private var userId: Int = -1
     private lateinit var viewModel: BudgetViewModel
     private lateinit var adapter: MonthlyReportAdapter
     private lateinit var recyclerView: RecyclerView
@@ -34,6 +36,15 @@ class MonthlyReportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_monthly_report)
+
+
+        userId = intent.getIntExtra("USER_ID", -1)
+
+        if (userId == -1) {
+            Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
 
         viewModel = ViewModelProvider(this)[BudgetViewModel::class.java]
         adapter = MonthlyReportAdapter()

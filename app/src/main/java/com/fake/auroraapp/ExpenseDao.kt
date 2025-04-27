@@ -31,12 +31,16 @@ interface ExpenseDao {
     fun getExpensesByMonth(month: String, year: String): LiveData<List<Expense>>
 
     @Query("""
-        SELECT categoryId, SUM(amount) AS total
-        FROM expense
-        WHERE strftime('%m', date) = :month AND strftime('%Y', date) = :year
-        GROUP By categoryId
-        ORDER By total DESC
-        LIMIT 1
+        /*gets the category name*/
+        SELECT c.name AS category, SUM(e.amount) AS total
+    FROM expense e
+    /*joins each category with its expense*/
+    INNER JOIN category c ON e.categoryId = c.id
+    WHERE strftime('%m', e.date) = :month AND strftime('%Y', e.date) = :year
+    /*grouped by category name*/
+    GROUP BY c.name
+    ORDER BY total DESC
+    LIMIT 1
         """)
     suspend fun getTopCategory(month: String, year: String): TopCategory?
 

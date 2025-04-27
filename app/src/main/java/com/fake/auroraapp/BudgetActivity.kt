@@ -1,5 +1,6 @@
 package com.fake.auroraapp
 
+import android.content.Intent
 import android.net.Uri
 import  android.os.Bundle
 import android.text.InputType
@@ -10,14 +11,18 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.graphics.Color
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,12 +39,19 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.Legend.LegendForm
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import java.io.File
 import java.io.FileOutputStream
 
 
 class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
 
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var toolbar: Toolbar
+    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var viewModel: BudgetViewModel
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
@@ -62,6 +74,9 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
 
         viewModel = ViewModelProvider(this)[BudgetViewModel::class.java]
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navView = findViewById(R.id.nav_view)
+        toolbar = findViewById(R.id.toolbar)
         val imageProfile = findViewById<ImageView>(R.id.imageProfile)
         val textName = findViewById<TextView>(R.id.textProfileName)
         val textBudget = findViewById<TextView>(R.id.textMonthlyBudget)
@@ -70,6 +85,52 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         val pieChart = findViewById<PieChart>(R.id.pieChartDaily)
         val addCategory = findViewById<FloatingActionButton>(R.id.AddCategory)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerCategories)
+
+        setSupportActionBar(toolbar)
+
+        toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.Home -> {
+                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                true
+                }
+                R.id.Budget -> {
+                    Toast.makeText(this, "Budget Page", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, BudgetActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.Notification -> {
+                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.Reports -> {
+                    Toast.makeText(this, "Monthly Reports", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, AllExpensesActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.Progress -> {
+                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.Profile -> {
+                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    true
+                } else -> false
+            }.also {
+                //closes the navigation when a choice has been made
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        }
 
         categoryAdapter = CategoryAdapter(viewModel, this, this, userId)
         recyclerView.layoutManager = LinearLayoutManager(this)
