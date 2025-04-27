@@ -5,11 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AllExpensesActivity"
+    tools:context=".MonthlyReportActivity"
     android:orientation="vertical"
-    android:background="@color/Lavander"
     android:padding="16dp"
-    android:gravity="top">
+    android:background="@color/Lavander">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,21 +66,39 @@
     </LinearLayout>
 
     <TextView
-        android:text="All Expenses"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Monthly Report"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtTotalSpent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Spent: R 0"
+        android:textSize="14dp"/>
+
+    <TextView
+        android:id="@+id/txtTopCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top Category: - "
+        android:textSize="14dp"/>
+
+    <TextView
+        android:id="@+id/txtTransactionCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transactions: 0"
+        android:textSize="14dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecyclerAllExpenses"
+        android:id="@+id/recyclerMonthlyExpenses"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp" />
-
-
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

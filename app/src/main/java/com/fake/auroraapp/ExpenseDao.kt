@@ -29,4 +29,20 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM Expense WHERE strftime('%m', date) = :month and strftime('%Y', date) = :year")
     fun getExpensesByMonth(month: String, year: String): LiveData<List<Expense>>
+
+    @Query("""
+        SELECT categoryId, SUM(amount) AS total
+        FROM expense
+        WHERE strftime('%m', date) = :month AND strftime('%Y', date) = :year
+        GROUP By categoryId
+        ORDER By total DESC
+        LIMIT 1
+        """)
+    suspend fun getTopCategory(month: String, year: String): TopCategory?
+
+    @Query("SELECT SUM(amount) FROM expense WHERE strftime('%m', date) = :month AND strftime('%Y', date) = :year")
+    suspend fun getTotalSpent(month: String, year: String): Double?
+
+    @Query("SELECT COUNT(*) FROM expense WHERE strftime('%m', date) = :month AND strftime('%Y', date) = :year")
+    suspend fun getTransactionCount(month: String, year: String): Int
 }
