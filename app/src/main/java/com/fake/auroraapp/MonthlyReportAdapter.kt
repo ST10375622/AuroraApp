@@ -17,9 +17,9 @@ class MonthlyReportAdapter : RecyclerView.Adapter<MonthlyReportAdapter.ExpenseVi
     }
 
     inner class ExpenseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val txtName = view.findViewById<TextView>(R.id.textExpenseName)
-        val txtAmount = view.findViewById<TextView>(R.id.textExpenseAmount)
-        val txtDate = view.findViewById<TextView>(R.id.textExpenseDate)
+        val txtName = view.findViewById<TextView>(R.id.textExpensesName)
+        val txtAmount = view.findViewById<TextView>(R.id.textExpensesAmount)
+        val txtDate = view.findViewById<TextView>(R.id.textExpensesDate)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val view = LayoutInflater.from(parent.context)
