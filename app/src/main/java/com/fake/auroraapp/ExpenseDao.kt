@@ -49,4 +49,7 @@ interface ExpenseDao {
 
     @Query("SELECT COUNT(*) FROM expense WHERE strftime('%m', date) = :month AND strftime('%Y', date) = :year")
     suspend fun getTransactionCount(month: String, year: String): Int
+
+    @Query("SELECT * FROM Expense WHERE strftime('%m', date) = :month and strftime('%Y', date) = :year")
+    suspend fun getExpensesByMonthNow(month: String, year: String): List<Expense>
 }

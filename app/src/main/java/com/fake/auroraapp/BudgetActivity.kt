@@ -119,7 +119,11 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
                     true
                 }
                 R.id.Progress -> {
-                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Progress Screen", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ProgressActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.Profile -> {
