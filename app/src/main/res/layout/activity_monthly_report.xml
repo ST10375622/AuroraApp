@@ -1,104 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MonthlyReportActivity"
+    tools:context=".MonthlyReportActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/Lavander">
+    android:padding="8dp">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
+        android:background="@color/Purple"
+        app:title="Monthly Report"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:background="@mipmap/profile"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textProfileName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello User"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:padding="12dp"/>
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="30dp">
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerCrop"
+                        android:background="@mipmap/profile"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/Purple">
+                    <TextView
+                        android:id="@+id/textProfileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hello User"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"/>
+                </LinearLayout>
 
-        <Button
-            android:id="@+id/btnPreviousMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Previos"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="@color/Purple">
 
-        <TextView
-            android:id="@+id/textCurrentMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="March 2025"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_marginHorizontal="16dp"/>
+                    <Button
+                        android:id="@+id/btnPreviousMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Previos"/>
 
-        <Button
-            android:id="@+id/btnNextMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"/>
+                    <TextView
+                        android:id="@+id/textCurrentMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="March 2025"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:layout_marginHorizontal="16dp"/>
 
-    </LinearLayout>
+                    <Button
+                        android:id="@+id/btnNextMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Next"/>
+                </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="Monthly Report"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Monthly Report"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txtTotalSpent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Spent: R 0"
-        android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/txtTotalSpent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Spent: R 0"
+                    android:textSize="18dp"/>
 
-    <TextView
-        android:id="@+id/txtTopCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Top Category: - "
-        android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/txtTopCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top Category: - "
+                    android:textSize="18dp"/>
 
-    <TextView
-        android:id="@+id/txtTransactionCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transactions: 0"
-        android:textSize="14dp"/>
+                <TextView
+                    android:id="@+id/txtTransactionCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transactions: 0"
+                    android:textSize="18dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMonthlyExpenses"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerMonthlyExpenses"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"/>
+
+                <Button
+                    android:id="@+id/btnAllExpenses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Expenses"/>
+
+            </LinearLayout>
+        </ScrollView>
 </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/Purple"
+        app:menu="@menu/navigation"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"/>
+</androidx.drawerlayout.widget.DrawerLayout>

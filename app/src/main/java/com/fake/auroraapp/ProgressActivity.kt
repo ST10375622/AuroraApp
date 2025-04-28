@@ -110,7 +110,7 @@ class ProgressActivity : AppCompatActivity() {
 
                 R.id.Reports -> {
                     Toast.makeText(this, "Monthly Reports", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, AllExpensesActivity::class.java)
+                    val intent = Intent(this, MonthlyReportActivity::class.java)
                     intent.putExtra("USER_ID", userId)
                     startActivity(intent)
                     finish()
