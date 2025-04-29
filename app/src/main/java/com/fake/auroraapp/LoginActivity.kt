@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT)
                             .show()
-                        val intent = Intent(this@LoginActivity, BudgetActivity::class.java)
+                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                         intent.putExtra("USER_ID", user.id)
 
                         intent.flags =

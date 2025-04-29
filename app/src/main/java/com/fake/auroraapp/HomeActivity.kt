@@ -19,9 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
@@ -32,6 +34,7 @@ import java.time.Month
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Locale
+import android.graphics.Color
 
 class HomeActivity : AppCompatActivity() {
 
@@ -194,6 +197,13 @@ class HomeActivity : AppCompatActivity() {
 
             setUpPieChart(expenses)
             setupLegend(expenses)
+            viewModel.getBudget(userId).observe(this) { budget ->
+                budget?.let {
+                    val amountLeft = it.monthlyBudget - total
+                    findViewById<TextView>(R.id.textMonthlyBudget).text = "Budget: R ${it.monthlyBudget}"
+                    findViewById<TextView>(R.id.textMoneyLeft).text = "Left: R $amountLeft"
+                }
+            }
         }
     }
 
@@ -211,17 +221,26 @@ class HomeActivity : AppCompatActivity() {
 
         val dataSet = PieDataSet(entries, "")
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-        dataSet.valueTextSize = 16f
-
-        val pieData = PieData(dataSet)
+        dataSet.valueTextSize = 20f
+        dataSet.valueTextColor = Color.BLACK
+        val pieData = PieData(dataSet).apply {
+            setValueFormatter(object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return String.format("%.1f%%", value)
+                }
+            })
+        }
 
         pieChart.data = pieData
         pieChart.setUsePercentValues(true)
         pieChart.description.isEnabled = false
         pieChart.centerText = "Expenses"
-        pieChart.setEntryLabelTextSize(14f)
+        pieChart.setEntryLabelTextSize(18f)
         pieChart.animateY(1000)
         pieChart.invalidate()
+        pieChart.setEntryLabelColor(Color.BLACK)
+
+        pieChart.legend.isEnabled = false
     }
 
     private fun setupLegend(expenses: List<Expense>) {
@@ -236,7 +255,7 @@ class HomeActivity : AppCompatActivity() {
 
             val item = TextView(context).apply {
                 text = "$categoryName: \n R$total"
-                textSize = 16f
+                textSize = 18f
                 setPadding(8, 8, 8, 8)
             }
 
