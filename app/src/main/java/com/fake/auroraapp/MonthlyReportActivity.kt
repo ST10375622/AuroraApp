@@ -117,7 +117,11 @@ class MonthlyReportActivity : AppCompatActivity() {
                     true
                 }
                 R.id.Profile -> {
-                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
                     true
                 } else -> false
             }.also {

@@ -110,7 +110,7 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.Notification -> {
-                    Toast.makeText(this, "Notifications screen", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, NotificationActivity::class.java)
                     intent.putExtra("USER_ID", userId)
                     startActivity(intent)
@@ -126,7 +126,7 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.Progress -> {
-                    Toast.makeText(this, "Progress Screen", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Progress", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, ProgressActivity::class.java)
                     intent.putExtra("USER_ID", userId)
                     startActivity(intent)
@@ -134,7 +134,11 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.Profile -> {
-                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
                     true
                 } else -> false
             }.also {

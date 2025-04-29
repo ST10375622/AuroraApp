@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/Purple"
-            app:title="Budget"/>
+            app:title="Progress"/>
 
         <ScrollView
             android:layout_width="match_parent"

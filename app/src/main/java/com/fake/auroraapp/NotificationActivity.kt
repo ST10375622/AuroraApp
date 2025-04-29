@@ -83,12 +83,16 @@ class NotificationActivity : AppCompatActivity() {
             navView.setNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.Home -> {
-                        Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, HomeActivity::class.java)
+                        intent.putExtra("USER_ID", userId)
+                        startActivity(intent)
+                        finish()
                         true
                     }
 
                     R.id.Budget -> {
-                        Toast.makeText(this, "Budget Page", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Budget", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, BudgetActivity::class.java)
                         intent.putExtra("USER_ID", userId)
                         startActivity(intent)
@@ -115,7 +119,7 @@ class NotificationActivity : AppCompatActivity() {
                     }
 
                     R.id.Progress -> {
-                        Toast.makeText(this, "Progress Screen", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Progress", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, ProgressActivity::class.java)
                         intent.putExtra("USER_ID", userId)
                         startActivity(intent)
@@ -124,7 +128,11 @@ class NotificationActivity : AppCompatActivity() {
                     }
 
                     R.id.Profile -> {
-                        Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, ProfileActivity::class.java)
+                        intent.putExtra("USER_ID", userId)
+                        startActivity(intent)
+                        finish()
                         true
                     }
 
