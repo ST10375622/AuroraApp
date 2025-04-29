@@ -49,6 +49,7 @@ import com.google.android.material.navigation.NavigationView
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDate
 
 
 class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
@@ -350,6 +351,8 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
     private fun showAddExpenseDialog(categoryId: Int, imageUri: String? = null) {
         categoryAdapter.submitList(categoryAdapter.currentList)
     }
+
+
 
     private fun copyImageToInternalStorage(uri: Uri): String? {
         return try {

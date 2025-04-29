@@ -3,6 +3,7 @@ package com.fake.auroraapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -109,6 +110,8 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         val formattedMonth = String.format("%02d", month)
         return repository.getExpensesByMonth(formattedMonth, year.toString())
     }
+
+
 
     suspend fun getTopSpendingCategory(month: Int, year: Int): TopCategory? {
         val m = String.format("%02d", month)

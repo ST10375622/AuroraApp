@@ -22,6 +22,7 @@ class AllExpenseAdapter : RecyclerView.Adapter<AllExpenseAdapter.ExpensiveViewHo
     inner class ExpensiveViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtName = view.findViewById<TextView>(R.id.txtExpenseName)
         val txtAmount = view.findViewById<TextView>(R.id.txtExpenseAmount)
+        val txtDate = view.findViewById<TextView>(R.id.txtExpenseDate)
         val imgReceipt = view.findViewById<ImageView>(R.id.imgReceipt)
     }
 
@@ -35,6 +36,7 @@ class AllExpenseAdapter : RecyclerView.Adapter<AllExpenseAdapter.ExpensiveViewHo
         val expense = expense[position]
         holder.txtName.text = expense.name
         holder.txtAmount.text = "R ${expense.amount.toInt()}"
+        holder.txtDate.text = expense.date
 
         if (!expense.receiptUri.isNullOrEmpty()){
             Glide.with(holder.itemView.context)
