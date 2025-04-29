@@ -107,7 +107,11 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
                     true
                 }
                 R.id.Notification -> {
-                    Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Notification screen", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, NotificationActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.Reports -> {

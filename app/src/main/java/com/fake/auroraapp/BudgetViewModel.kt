@@ -5,6 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class BudgetViewModel(application: Application): AndroidViewModel(application) {
@@ -12,11 +15,12 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
     private val repository = BudgetRepository(
         db.userDao(),
-        db .budgetDao(),
+        db.budgetDao(),
         db.categoryDao(),
         db.expenseDao()
     )
 
+    private val notificationRepository = NotificationRepository(db.notificationDao())
     suspend fun getUser(userId: Int): User? = repository.getUserById(userId)
 
     fun getBudget(userId: Int): LiveData<Budget> = repository.getBudget(userId)
@@ -66,6 +70,15 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun insertNotification(notification: Notification) {
+        viewModelScope.launch {
+            notificationRepository.insertNotification(notification)
+        }
+    }
+    fun getAllNotifications(): LiveData<List<Notification>> {
+        return notificationRepository.getAllNotification()
+    }
+
     fun updateAmountLeft(userId: Int, monthlyBudget: Double, minimumBudget: Double) {
         viewModelScope.launch {
             val totalExpense = repository.getTotalExpense(userId)
@@ -79,6 +92,16 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
             )
             insertOrUpdateBudget(updatedBudget)
 
+            if (amountLeft <= minimumBudget) {
+                val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                val warningMessage = "Warning: Your expenses have reached the minimum budget limit!"
+
+                val notification = Notification(
+                    message = warningMessage,
+                    date = currentDate
+                )
+                insertNotification(notification)
+            }
         }
     }
 
