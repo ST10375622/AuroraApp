@@ -95,7 +95,11 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.Home -> {
-                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Home Page", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    startActivity(intent)
+                    finish()
                 true
                 }
                 R.id.Budget -> {

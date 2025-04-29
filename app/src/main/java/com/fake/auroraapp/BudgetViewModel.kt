@@ -124,4 +124,8 @@ class BudgetViewModel(application: Application): AndroidViewModel(application) {
         val m = String.format("%02d", month)
         return repository.getTransactionCount(m, year.toString())
     }
+
+    suspend fun getCategoryName(categoryId: Int): String? {
+        return repository.getCategoryNameById(categoryId)
+    }
 }

@@ -3,6 +3,7 @@ package com.fake.auroraapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,14 +18,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Locale
 
-class AllExpensesActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -35,13 +44,18 @@ class AllExpensesActivity : AppCompatActivity() {
     private lateinit var adapter: AllExpenseAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var textMonth: TextView
+    private lateinit var pieChart: PieChart
+    private lateinit var legendContainer: LinearLayout
+    private lateinit var textTotalExpenses: TextView
 
+    private var calendar = Calendar.getInstance()
     private  var currentMonth = LocalDate.now().monthValue
     private var currentYear = LocalDate.now().year
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_all_expenses)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_home)
 
         userId = intent.getIntExtra("USER_ID", -1)
 
@@ -57,15 +71,16 @@ class AllExpensesActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
         toolbar = findViewById(R.id.toolbar)
-        recyclerView = findViewById(R.id.RecyclerAllExpenses)
         textMonth = findViewById(R.id.textCurrentMonth)
+        legendContainer = findViewById(R.id.legendContainer)
+        textTotalExpenses = findViewById(R.id.textTotalExpenses)
+        pieChart = findViewById(R.id.pieChart)
+
         val btnPrev = findViewById<Button>(R.id.btnPreviousMonth)
         val btnNext = findViewById<Button>(R.id.btnNextMonth)
-        val btnBackToReport = findViewById<Button>(R.id.btnBackToReport)
         val textName = findViewById<TextView>(R.id.textProfileName)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        val textBudget = findViewById<TextView>(R.id.textMonthlyBudget)
+        val textLeft = findViewById<TextView>(R.id.textMoneyLeft)
 
         setSupportActionBar(toolbar)
 
@@ -132,8 +147,17 @@ class AllExpensesActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.getBudget(userId).observe(this) { budget ->
+            budget?.let {
+                textBudget.text = "Budget: R ${it.monthlyBudget}"
+                textLeft.text = "Left: R ${it.amountLeft}"
+
+            }
+        }
+
         updateMonthText()
         loadExpenses()
+
 
         btnPrev.setOnClickListener {
             currentMonth -= 1
@@ -154,15 +178,6 @@ class AllExpensesActivity : AppCompatActivity() {
             updateMonthText()
             loadExpenses()
         }
-
-        btnBackToReport.setOnClickListener {
-            Toast.makeText(this, "Monthly Reports", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MonthlyReportActivity::class.java)
-            intent.putExtra("USER_ID", userId)
-            startActivity(intent)
-            finish()
-            true
-        }
     }
 
     private  fun updateMonthText() {
@@ -173,6 +188,60 @@ class AllExpensesActivity : AppCompatActivity() {
     private fun loadExpenses() {
         viewModel.getExpensesForMonth(currentMonth, currentYear).observe(this) { expenses ->
             adapter.submitList(expenses)
+
+            val total = expenses.sumOf { it.amount }
+            textTotalExpenses.text = "R $total\nYour total Expenses so far"
+
+            setUpPieChart(expenses)
+            setupLegend(expenses)
         }
+    }
+
+
+
+    private fun setUpPieChart(expenses: List<Expense>)
+    {
+
+        val entries = expenses.groupBy { it.categoryId }
+            .map { (categoryId, expenseList) ->
+                val categoryName = runBlocking { viewModel.getCategoryName(categoryId) ?: "Unkown" }
+                val total = expenseList.sumOf { it.amount }.toFloat()
+                PieEntry(total, categoryName)
+            }
+
+        val dataSet = PieDataSet(entries, "")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        dataSet.valueTextSize = 16f
+
+        val pieData = PieData(dataSet)
+
+        pieChart.data = pieData
+        pieChart.setUsePercentValues(true)
+        pieChart.description.isEnabled = false
+        pieChart.centerText = "Expenses"
+        pieChart.setEntryLabelTextSize(14f)
+        pieChart.animateY(1000)
+        pieChart.invalidate()
+    }
+
+    private fun setupLegend(expenses: List<Expense>) {
+        legendContainer.removeAllViews()
+        val context = this
+
+        val grouped = expenses.groupBy { it.categoryId }
+
+        grouped.forEach { (categoryId, expenseList) ->
+            val total = expenseList.sumOf { it.amount }
+            val categoryName = runBlocking { viewModel.getCategoryName(categoryId) ?: "Unknown" }
+
+            val item = TextView(context).apply {
+                text = "$categoryName: \n R$total"
+                textSize = 16f
+                setPadding(8, 8, 8, 8)
+            }
+
+            legendContainer.addView(item)
+        }
+
     }
 }

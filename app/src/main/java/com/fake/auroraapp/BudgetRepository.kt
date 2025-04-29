@@ -42,4 +42,7 @@ class BudgetRepository (
         return expenseDao.getTransactionCount(month, year)
     }
 
+    suspend fun getCategoryNameById(categoryId: Int): String? {
+        return categoryDao.getCategoryNameById(categoryId)
+    }
 }

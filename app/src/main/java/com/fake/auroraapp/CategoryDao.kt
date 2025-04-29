@@ -16,6 +16,10 @@ interface CategoryDao {
     @Query("SELECT * FROM Category WHERE userId = :userId")
     fun getCategoriesByUser(userId: Int): LiveData<List<Category>>
 
+    @Query("SELECT name FROM Category WHERE id = :categoryId")
+    suspend fun getCategoryNameById(categoryId: Int): String?
+
+
     @Delete
     suspend fun deleteCategory(category: Category)
 }
