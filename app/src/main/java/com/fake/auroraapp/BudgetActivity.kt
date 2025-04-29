@@ -1,8 +1,11 @@
 package com.fake.auroraapp
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import  android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.InputType
 import android.widget.Adapter
 import android.widget.Button
@@ -19,6 +22,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.graphics.Color
+import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -44,6 +48,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 
 class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
@@ -55,6 +60,9 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
     private lateinit var viewModel: BudgetViewModel
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cameraImageUri: Uri
     private var selectedReceiptUri: Uri? = null
     private var currentCategoryIdForExpense: Int = -1
     private var userId: Int = -1
@@ -168,6 +176,22 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             }
         }
 
+        cameraLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val photo = result.data!!.extras?.get("data") as? Bitmap
+                photo?.let {
+                    val savedPath = saveBitmapToInternalStorage(it)
+                    if (savedPath != null && currentCategoryIdForExpense != -1) {
+                        showAddExpenseDialog(currentCategoryIdForExpense, savedPath)
+                    } else {
+                        Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
         viewModel.getBudget(userId).observe(this) { budget ->
             budget?.let {
                 textBudget.text = "Budget: R ${it.monthlyBudget}"
@@ -195,10 +219,46 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         }
     }
 
-    override fun pickImageForCategory(categoryId: Int) {
-        currentCategoryIdForExpense = categoryId
-        imagePickerLauncher.launch("image/*")
+    private fun saveBitmapToInternalStorage(bitmap: Bitmap): String? {
+        return try {
+            val fileName = "camera_image_${System.currentTimeMillis()}.jpg"
+            val file = File(filesDir, fileName)
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            file.absolutePath
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
+
+    private fun openCameraForCategory(categoryId: Int) {
+        currentCategoryIdForExpense = categoryId
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraLauncher.launch(cameraIntent)
+    }
+
+
+    override fun pickImageForCategory(categoryId: Int) {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        AlertDialog.Builder(this)
+            .setTitle("Add Receipt")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openCameraForCategory(categoryId)
+                    1 -> {
+                        currentCategoryIdForExpense = categoryId
+                        imagePickerLauncher.launch("image/*")
+                    }
+                }
+            }
+            .show()
+    }
+
+
+
 
     private fun updatePieChart(pieChart: PieChart, expenses: List<Expense>, categoryMap: Map<Int, String>) {
 
