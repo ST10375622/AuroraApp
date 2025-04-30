@@ -55,4 +55,5 @@ interface ExpenseDao {
 
     @Query("SELECT COUNT(*) FROM Expense WHERE userId = :userId")
     suspend fun getTransactionCount(userId: Int): Int
+
 }

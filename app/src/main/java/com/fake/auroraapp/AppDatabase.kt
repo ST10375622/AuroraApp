@@ -8,8 +8,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [User::class, Budget::class, Category::class, Expense::class, Notification::class, TreeProgress::class],
-    version = 3,
+    entities = [User::class, Budget::class, Category::class, Expense::class, Notification::class, TreeProgress::class, DailyStreak::class],
+    version = 4,
     exportSchema =  false
 )
 
@@ -20,19 +20,20 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
     abstract fun notificationDao(): NotificationDao
     abstract fun TreeProgressDao(): TreeProgressDao
+    abstract fun DailyStreakDao(): DailyStreakDao
 
     companion object{
         @Volatile private var INSTANCE: AppDatabase? = null
 
         //made a change to the version of my database so i had to make a migration
-        val MIGRATION_2_3 = object : Migration(2, 3) {
+        val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("""
-             CREATE TABLE IF NOT EXISTS `TreeProgress` (
+             CREATE TABLE IF NOT EXISTS `DailyStreak` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 `userId` INTEGER NOT NULL,
-                `progress` INTEGER NOT NULL,
-                `timestamp` TEXT NOT NULL
+                `currentStreak` INTEGER NOT NULL,
+                `lastLoggedDate` TEXT NOT NULL
             )
         """.trimIndent())
             }
@@ -45,7 +46,7 @@ abstract class AppDatabase: RoomDatabase() {
                     AppDatabase::class.java,
                     "budget_db"
                 )
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_3_4)
                     .build()
                 INSTANCE = instance
                 instance

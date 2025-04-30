@@ -31,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var viewModel: BudgetViewModel
     private lateinit var treeImageView: ImageView
     private lateinit var treeStageLabel: TextView
+    private lateinit var streakLabel: TextView
 
     private val expenseviewModel: ExpenseViewModel by viewModels()
     private  var currentMonth = LocalDate.now().monthValue
@@ -56,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         treeImageView = findViewById(R.id.treeImageView)
         treeStageLabel = findViewById(R.id.treeStageLabel)
+        streakLabel = findViewById(R.id.streakLabel)
 
         val textName = findViewById<TextView>(R.id.textProfileName)
 
@@ -127,6 +129,13 @@ class ProfileActivity : AppCompatActivity() {
                 textName.text = "Hello, ${it.name}"
             }
         }
+
+        expenseviewModel.dailyStreak.observe(this, Observer { streak ->
+            val days = streak?.currentStreak ?: 0
+            streakLabel.text = "🔥 $days-day streak!"
+        })
+
+        expenseviewModel.loadStreak(userId)
 
         expenseviewModel.getTransactionCount(userId).observe(this, Observer { transactionCount ->
             updateTreeStageBasedOnTransactions(transactionCount)

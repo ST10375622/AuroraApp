@@ -45,4 +45,5 @@ class BudgetRepository (
     suspend fun getCategoryNameById(categoryId: Int): String? {
         return categoryDao.getCategoryNameById(categoryId)
     }
+
 }

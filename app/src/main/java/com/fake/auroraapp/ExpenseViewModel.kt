@@ -3,15 +3,20 @@ package com.fake.auroraapp
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val expenseDao = AppDatabase.getDatabase(application).expenseDao()
     private val db = AppDatabase.getDatabase(application)
     private val treeProgressDao = AppDatabase.getDatabase(application).TreeProgressDao()
+    private val _dailyStreak = MutableLiveData<DailyStreak?>()
+    val dailyStreak: LiveData<DailyStreak?> get() = _dailyStreak
 
     fun getTotalExpensesLive(userId: Int): LiveData<Double?> {
         return object : LiveData<Double?>() {
@@ -30,22 +35,52 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             expenseDao.insertExpense(expense)
 
-            val total = expenseDao.getTotalExpenses(expense.userId) ?: 0.0
-            val progressStage = when {
-                total < 100 -> 1
-                total < 300 -> 2
-                total < 600 -> 3
-                total < 1000 -> 4
-                else -> 5
+            val today = LocalDate.now()
+            val todayStr =today.toString()
+
+            val streakDao = db.DailyStreakDao()
+            val existingStreak = streakDao.getStreak(expense.userId)
+
+
+            if (existingStreak != null) {
+                val lastLoggedDate = LocalDate.parse(existingStreak.lastLoggedDate)
+
+                if (lastLoggedDate != today) {
+                    val daysBetween = ChronoUnit.DAYS.between(lastLoggedDate, today)
+
+                    when {
+                        daysBetween == 1L -> {
+                            // Consecutive day - increment streak
+                            existingStreak.currentStreak += 1
+                        }
+
+                        daysBetween > 1L -> {
+                            // Missed a day - reset streak
+                            existingStreak.currentStreak = 1
+                        }
+                    }
+
+                    existingStreak.lastLoggedDate = todayStr
+                    streakDao.insertOrUpdateStreak(existingStreak)
+                }
+                _dailyStreak.postValue(existingStreak)
+            } else {
+                //First Time Logging - starting new streak
+                val newStreak = DailyStreak(
+                    userId = expense.userId,
+                    currentStreak = 1,
+                    lastLoggedDate = todayStr
+                )
+                streakDao.insertOrUpdateStreak(newStreak)
+                _dailyStreak.postValue(newStreak)
             }
+        }
+    }
 
-            val progress = TreeProgress(
-                userId = expense.userId,
-                progress = progressStage,
-                timestamp = System.currentTimeMillis().toString()
-            )
-
-            db.TreeProgressDao().insertProgress(progress)
+    fun loadStreak(userId: Int) {
+        viewModelScope.launch{
+            val streak = db.DailyStreakDao().getStreak(userId)
+            _dailyStreak.postValue(streak)
         }
     }
 
