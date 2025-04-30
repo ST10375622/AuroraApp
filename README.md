@@ -1,8 +1,11 @@
 # Aurora
 
-This is a personal budget tracker app. This app will allow individuals to manage their money.
+This is a personal budget tracker app. The name of my app is Aurora. This app will allow individuals to manage their money.
 This app exists as it will help individuals set out a budget and it will help the individuals 
-to eneter their income and any expenses.
+to eneter their income and any expenses. Some of the innovative features that I will be implementing are notifications, gamification features, reports and graphs. 
+The notification feature will alert the user when they are about to go over budget.
+The gamification features include badges for every month that the user does not go over budget and rewards for every time they enter their expenses. 
+Reports and graphs will be created to ensure that the user is aware of where they are in their finances, this was a very common feature among the different apps that I researched.
 
 ## 🚀 Features
 
@@ -14,11 +17,18 @@ to eneter their income and any expenses.
 - Ability to view total monthly spending for a selectable period
 - Graphs that will show daily spending
 - A progression Dashboard showing where the individual is at the current month
-- gamification elements such as badges for not going overbudget
+- gamification elements which is growing a tree depeinding on the number of transactions made
 - Notification to notify user when they are about to go overbudget
 - Monthly report generated for users
-- Support multiple currencies
 - Device sharing
+
+## Changes made to app
+- Removed the rewards sytem for gamification and replaced it with the tree growing based off the number of transactions made by a user.
+- i also added the daily streak feature
+- i also made a change to the navigation to make the app user friendly
+
+## Video Link:
+- 
 
 ## 📸 Screenshots 
 
