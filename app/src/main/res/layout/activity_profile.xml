@@ -1,3 +1,8 @@
+
+<!--Code Attribution:
+    Navigation View
+    using side navigation menu (Android Developers, 2024)
+    Link: https://developer.android.com/reference/com/google/android/material/navigation/NavigationView -->
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!--Users information section-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -55,6 +61,7 @@
                         android:paddingStart="8dp"/>
                 </LinearLayout>
 
+                <!--Tree progress section-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,6 +90,7 @@
 
             </LinearLayout>
 
+                <!--Daily streak section-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

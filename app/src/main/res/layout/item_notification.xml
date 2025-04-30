@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--Making use of cardview to display the notifications
+    It makes the notifications look clean and clear -->
+<!--The implementation uses the cardview layout as
+recommended in the Android Developer documentation (Android Developers, 2024)
+Link: https://developer.android.com/develop/ui/views/layout/cardview -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notificationCard"
@@ -21,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Notification Message"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:textColor="@color/black"/>
 
         <TextView
