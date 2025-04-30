@@ -47,9 +47,8 @@ class MonthlyReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_monthly_report)
 
-
+        //retrives the users id so that the name and data can be displayed
         userId = intent.getIntExtra("USER_ID", -1)
-
         if (userId == -1) {
             Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG).show()
             finish()
@@ -82,6 +81,7 @@ class MonthlyReportActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        //navigate the user to the specific screen
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.Home -> {
@@ -130,6 +130,7 @@ class MonthlyReportActivity : AppCompatActivity() {
             }
         }
 
+        //Displays the users name
         lifecycleScope.launch {
             val user = viewModel.getUser(userId)
             user?.let {
@@ -140,6 +141,7 @@ class MonthlyReportActivity : AppCompatActivity() {
         updateMonthText()
         loadMonthlyReport()
 
+        //changes the date to a month behind
         btnPrev.setOnClickListener {
             currentMonth -= 1
             if (currentMonth < 1) {
@@ -150,6 +152,7 @@ class MonthlyReportActivity : AppCompatActivity() {
             loadMonthlyReport()
         }
 
+        //changes the date to a month ahead
         btnNext.setOnClickListener {
             currentMonth += 1
             if (currentMonth > 12) {
@@ -160,6 +163,7 @@ class MonthlyReportActivity : AppCompatActivity() {
             loadMonthlyReport()
         }
 
+        //directs to the all expense activity
         btnAllExpenses.setOnClickListener {
             Toast.makeText(this, "All Expenses", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, AllExpensesActivity::class.java)
@@ -170,11 +174,17 @@ class MonthlyReportActivity : AppCompatActivity() {
         }
     }
 
+    //Converts the numeric month into a readable string
+    //Code Attribution
+    //Class LocalDate
+    //Oracle (2024)
     private fun updateMonthText() {
         val monthName = Month.of(currentMonth).getDisplayName(TextStyle.FULL, Locale.getDefault())
         textMonth.text = "$monthName $currentYear"
     }
 
+    //loads monthly report for the user
+    //takes into account when any changes were made to the date
     private fun loadMonthlyReport() {
         viewModel.getExpensesForMonth(currentMonth, currentYear).observe(this) { expense ->
             adapter.submitList(expense)

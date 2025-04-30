@@ -31,6 +31,9 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /*Code Attribution
+   * View Model
+   * Android Developers(2024)*/
     fun insertExpense(expense: Expense) {
         viewModelScope.launch {
             expenseDao.insertExpense(expense)
@@ -77,6 +80,9 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /*Code Attribution
+   * View Model Scope
+   * Android Developers(2024)*/
     fun loadStreak(userId: Int) {
         viewModelScope.launch{
             val streak = db.DailyStreakDao().getStreak(userId)
@@ -90,6 +96,9 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    /*Code Attribution
+   * View Model Scope
+   * Android Developers(2024)*/
     fun getTransactionCount(userId: Int): LiveData<Int> {
         return object : LiveData<Int>() {
             override fun onActive() {

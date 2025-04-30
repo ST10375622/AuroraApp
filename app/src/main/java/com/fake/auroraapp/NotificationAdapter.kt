@@ -16,18 +16,29 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     val dateText: TextView = itemView.findViewById(R.id.textViewNotificationDate)
 }
 
+    /*Inflates the layout for the notification
+   * Code Attribution
+   * RecyclerView.Adapter
+   * Android Developer (2024)*/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_notification, parent, false)
         return NotificationViewHolder(view)
     }
 
+    /*Observes notifications
+    * Code Attribution
+    * LiveData.observeForever()
+    * Android Developer (2024)*/
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
         val notification = getItem(position)
         holder.messageText.text = notification.message
         holder.dateText.text = notification.date
     }
 
+    /*Code Attribution
+    * DiffUtil.ItemCallback
+    * Android Developer (2024)*/
     class DiffCallback : DiffUtil.ItemCallback<Notification>() {
         override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
             return oldItem.id == newItem.id

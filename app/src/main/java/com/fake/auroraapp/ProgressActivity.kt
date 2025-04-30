@@ -68,6 +68,7 @@ class ProgressActivity : AppCompatActivity() {
         val db = AppDatabase.getDatabase(this)
         val userDao = db.userDao()
 
+        //displays the user name
         lifecycleScope.launch {
             val user = userDao.getUserById(userId)
             user?.let {
@@ -87,6 +88,7 @@ class ProgressActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        // navigates to the different screens
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.Home -> {
@@ -154,12 +156,14 @@ class ProgressActivity : AppCompatActivity() {
         updateMonthText()
         loadMonthlyProgress()
 
+        //goes to the previous month
         findViewById<Button>(R.id.btnPreviousMonth).setOnClickListener {
             calendar.add(Calendar.MONTH, -1)
             updateMonthText()
             loadMonthlyProgress()
         }
 
+        //goes to the following month
         findViewById<Button>(R.id.btnNextMonth).setOnClickListener {
             calendar.add(Calendar.MONTH, 1)
             updateMonthText()
@@ -174,17 +178,25 @@ class ProgressActivity : AppCompatActivity() {
         monthText.text = sdf.format(calendar.time)
     }
 
+    //handles the monthly progress
     private fun loadMonthlyProgress() {
         val db = AppDatabase.getDatabase(this)
         val budgetDao = db.budgetDao()
         val expenseDao = db.expenseDao()
 
+        //simplifies the date
+        //date format
         val sdfMonth = SimpleDateFormat("MM", Locale.getDefault())
         val sdfYear = SimpleDateFormat("yyyy", Locale.getDefault())
 
         val selectedMonth = sdfMonth.format(calendar.time)
         val selectedYear = sdfYear.format(calendar.time)
 
+        /*the visual representation of the graph
+         Code Attribution:
+         MPAndroidChart Library
+         Visual data representation using the MPAndroidChart library (Jahoda, 2024)
+         Link: https://github.com/PhilJay/MPAndroidChart*/
         lifecycleScope.launch {
             val budget = budgetDao.getBudgetValue(userId)
             val monthlyBudgetAmount = budget?.monthlyBudget ?: 0.0
@@ -221,6 +233,11 @@ class ProgressActivity : AppCompatActivity() {
         }
     }
 
+    /*the visual representation of the graph
+         Code Attribution:
+         MPAndroidChart Library
+         Visual data representation using the MPAndroidChart library (Jahoda, 2024)
+         Link: https://github.com/PhilJay/MPAndroidChart*/
     private fun setupBarChart(budgetAmount: Float, expensesAmount: Float) {
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(0f, budgetAmount))

@@ -8,8 +8,9 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
+    //Lists all the tables that within the database
     entities = [User::class, Budget::class, Category::class, Expense::class, Notification::class, TreeProgress::class, DailyStreak::class],
-    version = 4,
+    version = 4,// this is schema version, it is on number 4 as some changes were made to the database
     exportSchema =  false
 )
 
@@ -26,7 +27,10 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile private var INSTANCE: AppDatabase? = null
 
         //made a change to the version of my database so i had to make a migration
-        val MIGRATION_3_4 = object : Migration(3, 4) {
+        //Code Attribution
+        //Migrate Room Database
+        //Android Developers(2024)
+        val MIGRATION_3_4 = object : Migration(3, 4) { //this is the migration from the old version to the new version
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("""
              CREATE TABLE IF NOT EXISTS `DailyStreak` (

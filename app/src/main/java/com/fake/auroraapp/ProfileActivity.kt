@@ -42,8 +42,8 @@ class ProfileActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_profile)
 
+        //retrives the user id
         userId = intent.getIntExtra("USER_ID", -1)
-
         if (userId == -1) {
             Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG).show()
             finish()
@@ -67,6 +67,7 @@ class ProfileActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        //navigates to the different screens
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.Home -> {
@@ -123,6 +124,7 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
+        //displays the users name
         lifecycleScope.launch {
             val user = viewModel.getUser(userId)
             user?.let {

@@ -8,6 +8,7 @@ class NotificationRepository(private val notificationDao: NotificationDao) {
         notificationDao.insertNotification(notification)
     }
 
+    //gets all the notifications
     fun getAllNotification(): LiveData<List<Notification>> {
         return notificationDao.getAllNotifications()
     }

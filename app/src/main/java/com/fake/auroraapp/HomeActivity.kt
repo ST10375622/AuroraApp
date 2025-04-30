@@ -60,8 +60,8 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
+        //retrives the users id so that the name and data can be displayed
         userId = intent.getIntExtra("USER_ID", -1)
-
         if (userId == -1) {
             Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG).show()
             finish()
@@ -87,6 +87,7 @@ class HomeActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
 
+        //directs the user to the specific screen
         toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -147,6 +148,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        //Displays the users name
         lifecycleScope.launch {
             val user = viewModel.getUser(userId)
             user?.let {
@@ -154,6 +156,8 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        //displays to the user the amount left and their budget
+        //made use of live data
         viewModel.getBudget(userId).observe(this) { budget ->
             budget?.let {
                 textBudget.text = "Budget: R ${it.monthlyBudget}"
@@ -165,7 +169,7 @@ class HomeActivity : AppCompatActivity() {
         updateMonthText()
         loadExpenses()
 
-
+        //Changes the date to the previous month
         btnPrev.setOnClickListener {
             currentMonth -= 1
             if (currentMonth < 1) {
@@ -176,6 +180,7 @@ class HomeActivity : AppCompatActivity() {
             loadExpenses()
         }
 
+        //Changes the date to the next month
         btnNext.setOnClickListener {
             currentMonth += 1
             if (currentMonth > 12) {
@@ -187,6 +192,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //Converts the numeric month into a readable string
+    //Code Attribution
+    //Class LocalDate
+    //Oracle (2024)
     private  fun updateMonthText() {
         val monthName = Month.of(currentMonth).getDisplayName(TextStyle.FULL, Locale.getDefault())
         textMonth.text = "$monthName $currentYear"
@@ -212,7 +221,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-
+    /*the visual representation of the graph
+             Code Attribution:
+             MPAndroidChart Library
+             Visual data representation using the MPAndroidChart library (Jahoda, 2024)
+             Link: https://github.com/PhilJay/MPAndroidChart*/
     private fun setUpPieChart(expenses: List<Expense>)
     {
 

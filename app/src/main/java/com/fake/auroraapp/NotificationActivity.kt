@@ -53,8 +53,8 @@ class NotificationActivity : AppCompatActivity() {
         notificationAdapter = NotificationAdapter()
         recyclerView.adapter = notificationAdapter
 
+        //retrives the user
         userId = intent.getIntExtra("USER_ID", -1)
-
         if (userId == -1) {
             Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG)
                 .show()
@@ -70,16 +70,11 @@ class NotificationActivity : AppCompatActivity() {
         }
             setSupportActionBar(toolbar)
 
-            toggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
-            )
+            toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
             drawerLayout.addDrawerListener(toggle)
             toggle.syncState()
 
+            //navigates to the specific screen
             navView.setNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.Home -> {
@@ -143,6 +138,7 @@ class NotificationActivity : AppCompatActivity() {
                 }
             }
 
+        //displays the users name
             lifecycleScope.launch {
                 val user = viewModel.getUser(userId)
                 user?.let {

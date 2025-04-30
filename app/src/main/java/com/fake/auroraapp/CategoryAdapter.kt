@@ -24,6 +24,7 @@ interface ExpenseImagePicker{
     fun pickImageForCategory(categoryId: Int)
 }
 
+//RecycleView.Adapter for displaying expense categories and their respective expenses
 class CategoryAdapter (
     private val viewModel: BudgetViewModel,
     private val context: Context,
@@ -31,16 +32,30 @@ class CategoryAdapter (
     private val userId: Int
 ): ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(DiffCallback()) {
 
+    /*this is an inner class
+    * holds references to the category item user interface
+    * Code Attribution
+    * ViewHolder Pattern
+    * Android Developer (2024)*/
     inner class CategoryViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val txtCategoryName: TextView = view.findViewById(R.id.txtCategoryName)
         val btnAddExpense: ImageButton = view.findViewById(R.id.btnAddExpense)
         val recyclerExpenses: RecyclerView = view.findViewById(R.id.recyclerExpenses)
     }
+    /*Inflates the layout for each category item
+    * Code Attribution
+    * RecyclerView.Adapter
+    * Android Developer (2024)*/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_category, parent, false)
         return CategoryViewHolder(view)
     }
+
+    /*Observes expenses by category and updates the list dynamically
+    * Code Attribution
+    * LiveData.observeForever()
+    * Android Developer (2024)*/
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
         holder.txtCategoryName.text = category.name
@@ -55,6 +70,12 @@ class CategoryAdapter (
             showAddExpenseDialog(category.id)
         }
     }
+
+    /*builds and displays a dialog
+    * Code attribution
+    *Alert Dialog
+    *  Android Developer (2024)
+     */
     private fun showAddExpenseDialog(categoryId: Int, imageUri: String? = null) {
 
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_expense, null)
@@ -102,6 +123,9 @@ class CategoryAdapter (
             .setNegativeButton("Cancel", null)
             .show()
     }
+    /*Code Attribution
+    * DiffUtil.ItemCallback
+    * Android Developer (2024)*/
     class DiffCallback : DiffUtil.ItemCallback<Category>() {
         override fun areItemsTheSame(oldItem: Category, newItem: Category) = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Category, newItem: Category) = oldItem == newItem

@@ -16,16 +16,29 @@ class MonthlyReportAdapter : RecyclerView.Adapter<MonthlyReportAdapter.ExpenseVi
         notifyDataSetChanged()
     }
 
+    /*this is an inner class
+    * holds references to the Expense item user interface
+    * Code Attribution
+    * ViewHolder Pattern
+    * Android Developer (2024)*/
     inner class ExpenseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtName = view.findViewById<TextView>(R.id.textExpensesName)
         val txtAmount = view.findViewById<TextView>(R.id.textExpensesAmount)
         val txtDate = view.findViewById<TextView>(R.id.textExpensesDate)
     }
+    /*Inflates the layout for the monthly expense
+    * Code Attribution
+    * RecyclerView.Adapter
+    * Android Developer (2024)*/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_monthly_expense, parent, false)
         return ExpenseViewHolder(view)
     }
+    /*Observes expenses
+    * Code Attribution
+    * LiveData.observeForever()
+    * Android Developer (2024)*/
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         val expense = expenses[position]
         holder.txtName.text = expense.name

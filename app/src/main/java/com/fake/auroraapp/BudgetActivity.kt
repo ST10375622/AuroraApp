@@ -73,8 +73,8 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         enableEdgeToEdge()
         setContentView(R.layout.activity_budget)
 
+        //retrives the users id so that the name and data can be displayed
         userId = intent.getIntExtra("USER_ID", -1)
-
         if (userId == -1) {
             Toast.makeText(this, "No user ID passed. Please log in again.", Toast.LENGTH_LONG).show()
             finish()
@@ -97,6 +97,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
 
         setSupportActionBar(toolbar)
 
+        //directs the user to the specific screen
         toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -161,6 +162,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = categoryAdapter
 
+        //Displays the users name
         lifecycleScope.launch {
             val user = viewModel.getUser(userId)
             user?.let {
@@ -168,6 +170,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             }
         }
 
+        //Allows the user to pick an image from their gallery
         imagePickerLauncher = registerForActivityResult(
             ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
@@ -181,6 +184,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             }
         }
 
+        //allows the user to take a picture with phone camera
         cameraLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -197,6 +201,8 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             }
         }
 
+        //displays to the user the amount left and their budget
+        //made use of live data
         viewModel.getBudget(userId).observe(this) { budget ->
             budget?.let {
                 textBudget.text = "Budget: R ${it.monthlyBudget}"
@@ -205,6 +211,9 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             }
         }
 
+        //Recycler view displays the categories
+        //Expenses are grouped in categories
+        //these categories are visualized in the graph
         viewModel.getCategories(userId).observe(this) { categories ->
             categoryAdapter.submitList(categories)
 
@@ -224,6 +233,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
         }
     }
 
+    //saving image data
     private fun saveBitmapToInternalStorage(bitmap: Bitmap): String? {
         return try {
             val fileName = "camera_image_${System.currentTimeMillis()}.jpg"
@@ -262,9 +272,11 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             .show()
     }
 
-
-
-
+    /*the visual representation of the graph
+         Code Attribution:
+         MPAndroidChart Library
+         Visual data representation using the MPAndroidChart library (Jahoda, 2024)
+         Link: https://github.com/PhilJay/MPAndroidChart*/
     private fun updatePieChart(pieChart: PieChart, expenses: List<Expense>, categoryMap: Map<Int, String>) {
 
         val groupedExpenses = expenses.groupBy { it.categoryId }
@@ -310,8 +322,13 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
 
     }
 
+    //Pops up when the user wants to enter their budget
     private fun showBudgetDialog() {
 
+        //inflates the dialog_set_budget
+        //Code Attribution
+        //layout Inflater
+        //Android Developers(2024)
         val dialogView = layoutInflater.inflate(R.layout.dialog_set_budget, null)
         val monthlyBudgetInput = dialogView.findViewById<EditText>(R.id.editMonthlyBudget)
         val minimumBudgetInput = dialogView.findViewById<EditText>(R.id.editMinimumBudget)
@@ -323,6 +340,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
                 val monthly = monthlyBudgetInput.text.toString().toDoubleOrNull()
                 val minimum = minimumBudgetInput.text.toString().toDoubleOrNull()
 
+                //ensures that their is data
                 if(monthly != null && minimum != null) {
                    viewModel.updateAmountLeft(userId, monthly, minimum)
                 } else {
@@ -333,6 +351,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             .show()
     }
 
+    //the add category dialog will be displayed
     private fun showAddCategoryDialog() {
         val input = EditText(this)
         AlertDialog.Builder(this)
@@ -348,6 +367,7 @@ class BudgetActivity : AppCompatActivity(), ExpenseImagePicker {
             .show()
     }
 
+    //the add expense dialog will be displayed
     private fun showAddExpenseDialog(categoryId: Int, imageUri: String? = null) {
         categoryAdapter.submitList(categoryAdapter.currentList)
     }

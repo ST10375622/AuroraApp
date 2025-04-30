@@ -59,6 +59,10 @@
             android:padding="12dp"/>
     </LinearLayout>
 
+            <!--Code Attribution:
+                    MPAndroidChart Library
+                    Visual data representation using the MPAndroidChart library (Jahoda, 2024)
+                    Link: https://github.com/PhilJay/MPAndroidChart-->
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChartDaily"
         android:layout_width="match_parent"

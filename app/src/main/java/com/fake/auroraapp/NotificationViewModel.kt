@@ -8,6 +8,7 @@ class NotificationViewModel(application: Application) : AndroidViewModel(applica
 
     private val notificationRepository = NotificationRepository(AppDatabase.getDatabase(application).notificationDao())
 
+    //gets all the notifications
     fun getAllNotifications(): LiveData<List<Notification>> {
         return notificationRepository.getAllNotification()
     }
