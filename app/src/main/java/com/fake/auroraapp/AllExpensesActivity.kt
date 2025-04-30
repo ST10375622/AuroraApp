@@ -176,6 +176,7 @@ class AllExpensesActivity : AppCompatActivity() {
 
     private fun loadExpenses() {
         viewModel.getExpensesForMonth(currentMonth, currentYear).observe(this) { expenses ->
+
             adapter.submitList(expenses)
         }
     }
