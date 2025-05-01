@@ -28,12 +28,12 @@ Reports and graphs will be created to ensure that the user is aware of where the
 - i also made a change to the navigation to make the app user friendly
 
 ## Video Link:
-- 
+- <https://youtu.be/pa1HU2Rha3E>
 
-##Reference 
+## Reference 
 
 - Android Developers, 2024. @Dao. [online] Available at:
-- <https://developer.android.com/reference/androidx/room/Dao>
+- <<https://developer.android.com/reference/androidx/room/Dao>>
 - [Accessed 23 April 2025].
 
 - Android Developers, 2024. @Insert. [online] Available at:
